@@ -47,7 +47,7 @@ export function Header({ onCartClick, showBackButton }: HeaderProps) {
                 <ChevronLeft className="w-6 h-6" />
               </button>
             )}
-            <h1 className="text-2xl font-bold text-[#2C8C1F]">AGROFORIA</h1>
+            <h1 className="text-2xl font-bold text-[#2C8C1F]">AGRIFORIA</h1>
           </div>
 
           {/* Delivery Mode Toggle */}
