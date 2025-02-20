@@ -1,6 +1,7 @@
 import React from 'react';
-import { X, Clock, AlertCircle, User } from 'lucide-react';
+import { X, Clock, AlertCircle } from 'lucide-react';
 import { useCartStore } from '../store/cart';
+import { useNavigate } from 'react-router-dom';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -9,11 +10,21 @@ interface CartDrawerProps {
 
 export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   const { items, itemCount, updateQuantity } = useCartStore();
+  const navigate = useNavigate();
   
   const subtotal = items.reduce((total, item) => total + item.price * item.quantity, 0);
   const deliveryCharge = 25;
   const handlingCharge = 5;
   const total = subtotal + deliveryCharge + handlingCharge;
+
+  const handleProceedToPayment = () => {
+    if (items.length === 0) {
+      alert('Please add items to your cart before proceeding to payment');
+      return;
+    }
+    navigate('/payment');
+    onClose();
+  };
 
   if (!isOpen) return null;
 
@@ -46,7 +57,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
               />
               <div className="flex-1">
                 <h3 className="font-medium">{item.name}</h3>
-                <p className="text-sm text-gray-500 mb-2">5 x 65 ml</p>
+                <p className="text-sm text-gray-500 mb-2">{item.weight}</p>
                 <div className="flex items-center justify-between">
                   <span className="font-semibold">₹{item.price * item.quantity}</span>
                   <div className="flex items-center border rounded-lg">
@@ -99,19 +110,13 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
           </div>
         </div>
 
-        {/* Cancellation Policy */}
-        <div className="p-4 bg-gray-50 text-sm">
-          <h4 className="font-semibold mb-1">Cancellation Policy</h4>
-          <p className="text-gray-600">
-            Orders cannot be cancelled once packed for delivery. In case of unexpected delays, a refund will be provided, if applicable.
-          </p>
-        </div>
-
         {/* Proceed Button */}
         <div className="p-4 border-t">
-          <button className="w-full bg-primary text-white font-medium py-3 rounded-lg hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
-            <User className="w-5 h-5" />
-            Proceed
+          <button 
+            onClick={handleProceedToPayment}
+            className="w-full bg-primary text-white font-medium py-3 rounded-lg hover:bg-primary/90 transition-colors"
+          >
+            Proceed to Payment
           </button>
         </div>
       </div>
